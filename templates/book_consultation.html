@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Consultation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="box has-text-centered">
+                    <h1 class="title has-text-primary">Book a Consultation</h1>
+                    <p class="subtitle">Fill in the details to proceed.</p>
+                    
+                    <form method="POST" class="mt-4">
+
+                        <div class="field">
+                            <label class="label">Choose Doctor</label>
+                            <div class="control">
+                                <div class="select is-fullwidth is-medium is-rounded">
+                                    <select name="doctor" required>
+                                        <option value="" disabled selected>Select a Doctor</option>
+                                        {% for doctor in doctors %}
+                                            <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <label class="label">Select Date</label>
+                            <div class="control">
+                                <input class="input is-medium is-rounded" type="date" name="date" required>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <label class="label">Choose Time Slot</label>
+                            <div class="control">
+                                <div class="select is-fullwidth is-medium is-rounded">
+                                    <select name="time" required>
+                                        <option value="" disabled selected>Select a Time Slot</option>
+                                        <option value="10">10:00 AM</option>
+                                        <option value="11">11:00 AM</option>
+                                        <option value="12">12:00 PM</option>
+                                        <option value="1">01:00 PM</option>
+                                        <option value="2">02:00 PM</option>
+                                        <option value="3">03:00 PM</option>
+                                        <option value="4">04:00 PM</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="control">
+                            <button class="button is-primary is-fullwidth is-medium mt-3">Proceed to Payment</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

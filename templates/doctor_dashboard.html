@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        .graph-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #f5f5f5;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function showPatientData() {
+            let selectedPatient = document.getElementById("patientDropdown").value;
+            let dataSection = document.getElementById("patientData");
+            if (selectedPatient) {
+                dataSection.style.display = "block";
+            } else {
+                dataSection.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="box has-text-centered">
+                    <h1 class="title has-text-primary">Doctor Dashboard</h1>
+                    <p class="subtitle">Monitor real-time patient health data.</p>
+
+                    <!-- Patient Selection Dropdown -->
+                    <div class="field">
+                        <label class="label">Select Patient</label>
+                        <div class="control">
+                            <div class="select is-fullwidth is-medium is-rounded">
+                                <select id="patientDropdown" onchange="showPatientData()">
+                                    <option value="" disabled selected>Select a patient</option>
+                                    <option value="patient1">Ms. Aditi</option>
+                                    <option value="patient2">Mr. Harshit</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real-Time Data Section (Initially Hidden) -->
+                    <div id="patientData" style="display: none;">
+                        <h2 class="title is-5 has-text-info">Real-Time Heart Rate</h2>
+                        <div class="graph-placeholder">Heart Rate Graph</div>
+
+                        <h2 class="title is-5 has-text-info mt-4">Real-Time Blood Pressure</h2>
+                        <div class="graph-placeholder">Blood Pressure Graph</div>
+
+                        <h2 class="title is-5 has-text-info mt-4">Real-Time Temperature</h2>
+                        <div class="graph-placeholder">Temperature Graph</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

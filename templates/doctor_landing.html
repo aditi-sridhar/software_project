@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Portal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="box has-text-centered">
+                    <h1 class="title has-text-primary">Doctor Portal</h1>
+                    <p class="subtitle">Choose an option below</p>
+
+                    <div class="buttons is-centered">
+                        <a href="{{ url_for('app_routes.doctor_dashboard') }}" class="button is-link is-medium is-fullwidth">
+                            Patient Monitoring
+                        </a>
+                        <a href="{{ url_for('app_routes.consult_request') }}" class="button is-primary is-medium is-fullwidth">
+                            Request Consultation
+                        </a>
+                    </div>
+
+                    <div class="box mt-4">
+                        <h2 class="title is-5">Check Appointment Schedule</h2>
+                        <p class="subtitle">Empty Schedule</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

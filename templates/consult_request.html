@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Consultation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="box has-text-centered">
+                    <h1 class="title has-text-primary">Request Consultation</h1>
+                    <p class="subtitle">Select a patient and provide a reason</p>
+
+                    <form id="consultForm" class="mt-4">
+                        <div class="field">
+                            <label class="label">Choose Patient</label>
+                            <div class="control">
+                                <div class="select is-fullwidth is-medium is-rounded">
+                                    <select name="patient" required>
+                                        <option value="" disabled selected>Select a Patient</option>
+                                        <option value="patient_1">Ms. Aditi</option>
+                                        <option value="patient_2">Mr. Harshit</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Reason for Consultation</label>
+                            <div class="control">
+                                <input class="input is-medium is-rounded" type="text" name="reason" placeholder="Enter reason" required>
+                            </div>
+                        </div>
+
+                        <div class="control">
+                            <button type="submit" class="button is-primary is-fullwidth is-medium mt-3">
+                                Request Consultation with Patient
+                            </button>
+                        </div>
+
+                        <!-- Notification (Hidden by Default) -->
+                        <div id="notification" class="notification is-success mt-4" style="display: none;">
+                            <strong>Notification Sent</strong>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById("consultForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent actual form submission
+        document.getElementById("notification").style.display = "block"; // Show notification
+    });
+</script>
+
+</body>
+</html>
