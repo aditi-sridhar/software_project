@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for,flash
-from models import User, Doctor, Appointment
+from models import User, Doctor, Appointment, Notification
 from datetime import datetime
 from models import db
 app_routes = Blueprint('app_routes', __name__)
@@ -68,3 +68,11 @@ def doctor_dashboard():
 @app_routes.route('/consult_request', methods=['GET', 'POST'])
 def consult_request():
     return render_template('consult_request.html')
+
+@app_routes.route('/notifications')
+def notifications():
+    # Query to get notifications from the database
+    notifications = Notification.query.all()
+    
+    # Pass the notifications to the HTML template
+    return render_template('notifications.html', notifications=notifications)

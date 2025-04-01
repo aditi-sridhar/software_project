@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
+from datetime import datetime
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -30,7 +30,7 @@ class Notification(db.Model):
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     appointment_datetime = db.Column(db.DateTime, nullable=False)
     message = db.Column(db.String(255), nullable=True)
-    created_datetime=db.Column(db.DateTime, nullable=False)
+    created_datetime=db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     user = db.relationship('User', back_populates='notifications')
     doctor = db.relationship('Doctor', back_populates='notifications')

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        .notification-card {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar is-fixed-top">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <h1 class="title is-4">MedSync-Online Health Monitoring Tool</h1>
+        </a>
+    </div>
+</nav>
+
+<!-- Notifications Section -->
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered">Your Notifications</h1>
+
+        <div class="columns is-multiline">
+            {% for notification in notifications %}
+            <div class="column is-one-third">
+                <div class="card notification-card">
+                    <div class="card-header">
+                        <p class="card-header-title">
+                            Notification from Doctor {{ notification.doctor.name }}
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        <div class="content">
+                            <p><strong>Appointment:</strong> {{ notification.appointment_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            <p><strong>Message:</strong> {{ notification.message or 'No message available' }}</p>
+                            <p><strong>Created On:</strong> {{ notification.created_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if not notifications %}
+        <div class="notification is-warning has-text-centered">
+            No notifications available.
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+</body>
+</html>
