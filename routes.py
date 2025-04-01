@@ -43,6 +43,7 @@ def book_consultation():
 def payment():
     doctor_id = request.args.get('doctor_id')
     appointment_datetime = request.args.get('appointment_datetime')
+    appointment_datetime=datetime.strptime(appointment_datetime, "%Y-%m-%d %H:%M:%S")
 
     if request.method == 'POST':
         new_appointment = Appointment(
