@@ -16,6 +16,15 @@
                     <h1 class="title has-text-primary">Book a Consultation</h1>
                     <p class="subtitle">Fill in the details to proceed.</p>
                     
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="notification is-danger is-light">
+                                {% for category, message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
                     <form method="POST" class="mt-4">
 
                         <div class="field">
