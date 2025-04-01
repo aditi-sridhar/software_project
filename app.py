@@ -2,10 +2,13 @@ from flask import Flask
 from routes import app_routes
 from models import db  # Import database instance
 from flask_migrate import Migrate
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db' # Database URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
 
 db.init_app(app)  # Bind database to Flask app
 migrate = Migrate(app, db)
