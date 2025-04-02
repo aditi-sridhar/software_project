@@ -6,12 +6,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    password=db.Column(db.String(128), nullable=False)
     appointments = db.relationship('Appointment', back_populates='user')
     notifications=db.relationship('Notification', back_populates='user')
 
 class Doctor(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     name=db.Column(db.String(80), nullable=False)
+    password=db.Column(db.String(128), nullable=False, default='password')
     appointments = db.relationship('Appointment', back_populates='doctor')
     notifications=db.relationship('Notification', back_populates='doctor')
 
