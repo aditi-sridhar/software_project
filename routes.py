@@ -156,21 +156,35 @@ def doctor_login():
 
 @app_routes.route('/doctor_landing')
 def doctor_landing():
-    # user_id = request.args.get('user_id')  # Get user_id from URL
-    # user = Doctor.query.get(user_id) if user_id else None
+    user_id = request.args.get('user_id')  # Get user_id from URL
+    user = Doctor.query.get(user_id) if user_id else None
 
-    # if not user:
-    #     current_app.logger.error("not logged in")
-    #     return redirect(url_for('app_routes.home'))
-    # appointments=Appointment.query.filter_by(doctor_id=user_id).all()
-    return render_template('doctor_landing.html')
+    if not user:
+        current_app.logger.error("not logged in")
+        return redirect(url_for('app_routes.home'))
+    appointments=Appointment.query.filter_by(doctor_id=user_id).all()
+    return render_template('doctor_landing.html',user_id=user_id, appointments=appointments)
 
 @app_routes.route('/doctor_dashboard')
+    
 def doctor_dashboard():
+    user_id = request.args.get('user_id')  # Get user_id from URL
+    user = Doctor.query.get(user_id) if user_id else None
+
+    if not user:
+        current_app.logger.error("not logged in")
+        return redirect(url_for('app_routes.home'))
     return render_template('doctor_dashboard.html')
 
 @app_routes.route('/consult_request', methods=['GET', 'POST'])
 def consult_request():
+    user_id = request.args.get('user_id')  # Get user_id from URL
+    user = Doctor.query.get(user_id) if user_id else None
+
+    if not user:
+        current_app.logger.error("not logged in")
+        return redirect(url_for('app_routes.home'))
+        
     return render_template('consult_request.html')
 
 @app_routes.route('/notifications')

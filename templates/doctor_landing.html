@@ -27,7 +27,28 @@
 
                     <div class="box mt-4">
                         <h2 class="title is-5">Check Appointment Schedule</h2>
-                        <p class="subtitle">Empty Schedule</p>
+                        {% if appointments %}
+                            <table class="table is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Patient Name</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for appointment in appointments %}
+                                    <tr>
+                                        <td>{{ appointment.user.name }}</td>
+                                        <td>{{ appointment.appointment_datetime.strftime('%Y-%m-%d') }}</td>
+                                        <td>{{ appointment.appointment_datetime.strftime('%H:%M') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p class="subtitle">No appointments scheduled.</p>
+                        {% endif %}
                     </div>
 
                 </div>
