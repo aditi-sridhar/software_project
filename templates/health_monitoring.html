@@ -7,17 +7,25 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
     <style>
-        .graph-placeholder {
+        .data-box {
             width: 100%;
-            height: 150px;
-            background-color: #f5f5f5;
-            border: 2px dashed #ccc;
+            height: 50px;
+            background-color: #e6f7ff;
+            border: 2px solid #007bff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            color: #888;
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
             margin-top: 10px;
+            border-radius: 8px;
+        }
+        
+        .alert {
+            background-color: #ffcccc !important;
+            border-color: #ff0000 !important;
+            color: #ff0000 !important;
         }
         #other-symptom-input {
             display: none;
@@ -127,13 +135,13 @@
                     <!-- Real-time Health Data Section -->
                     <div class="mt-5">
                         <h2 class="title is-5 has-text-info">Your Real-Time Heart Rate</h2>
-                        <div class="graph-placeholder">Heart Rate Graph</div>
-
+                        <div class="data-box" id="heart-rate-box">Loading...</div>
+                    
                         <h2 class="title is-5 has-text-info mt-4">Your Real-Time Blood Pressure</h2>
-                        <div class="graph-placeholder">Blood Pressure Graph</div>
-
+                        <div class="data-box" id="blood-pressure-box">Loading...</div>
+                    
                         <h2 class="title is-5 has-text-info mt-4">Your Real-Time Temperature</h2>
-                        <div class="graph-placeholder">Temperature Graph</div>
+                        <div class="data-box" id="temperature-box">Loading...</div>
                     </div>
 
                 </div>
@@ -141,6 +149,34 @@
         </div>
     </div>
 </section>
+<script>
+    let heartRateValues = {{ heart_rate|tojson }};
+    let bloodPressureValues = {{ blood_pressure|tojson }};
+    let temperatureValues = {{ temperature|tojson }};
 
+    let index = 0;
+
+    function updateValues() {
+        let hrBox = document.getElementById("heart-rate-box");
+        let bpBox = document.getElementById("blood-pressure-box");
+        let tempBox = document.getElementById("temperature-box");
+
+        let heartRate = heartRateValues[index % heartRateValues.length];
+        let bloodPressure = bloodPressureValues[index % bloodPressureValues.length];
+        let temperature = temperatureValues[index % temperatureValues.length];
+
+        hrBox.innerText = heartRate + " BPM";
+        bpBox.innerText = bloodPressure;
+        tempBox.innerText = temperature + "°C";
+
+        hrBox.classList.toggle("alert", heartRate < 60 || heartRate > 100);
+        bpBox.classList.toggle("alert", parseInt(bloodPressure.split('/')[0]) > 140);
+        tempBox.classList.toggle("alert", temperature > 37.5);
+
+        index++;
+    }
+
+    setInterval(updateValues, 2000);
+</script>
 </body>
 </html>

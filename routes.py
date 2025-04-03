@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from models import db
 from flask_bcrypt import Bcrypt
 import logging
+from real_time_sensor_values import get_sensor_data
 app_routes = Blueprint('app_routes', __name__)
 bcrypt = Bcrypt()
 
@@ -69,7 +70,13 @@ def health_monitoring():
     if request.method == 'POST':
         health_data = request.form.get('health_data')
         return redirect(url_for('app_routes.book_consultation', user_id=user_id))
-    return render_template('health_monitoring.html', user_id=user_id)
+    
+    sensor_data = get_sensor_data()
+    return render_template('health_monitoring.html', user_id=user_id, heart_rate=sensor_data["heart_rate"], 
+                           blood_pressure=sensor_data["blood_pressure"], 
+                           temperature=sensor_data["temperature"])
+
+
 
 @app_routes.route('/book_consultation', methods=['GET', 'POST'])
 
@@ -166,7 +173,6 @@ def doctor_landing():
     return render_template('doctor_landing.html',user_id=user_id, appointments=appointments)
 
 @app_routes.route('/doctor_dashboard')
-    
 def doctor_dashboard():
     user_id = request.args.get('user_id')  # Get user_id from URL
     user = Doctor.query.get(user_id) if user_id else None
@@ -174,7 +180,12 @@ def doctor_dashboard():
     if not user:
         current_app.logger.error("not logged in")
         return redirect(url_for('app_routes.home'))
-    return render_template('doctor_dashboard.html')
+    
+    all_patients=User.query.all()
+    sensor_data = get_sensor_data()
+    return render_template('doctor_dashboard.html', user_id=user_id, patients=all_patients, heart_rate=sensor_data["heart_rate"], 
+                           blood_pressure=sensor_data["blood_pressure"], 
+                           temperature=sensor_data["temperature"])
 
 @app_routes.route('/consult_request', methods=['GET', 'POST'])
 def consult_request():

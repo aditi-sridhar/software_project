@@ -6,30 +6,28 @@
     <title>Doctor Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
-        .graph-placeholder {
+        .data-box {
             width: 100%;
-            height: 150px;
-            background-color: #f5f5f5;
-            border: 2px dashed #ccc;
+            height: 50px;
+            background-color: #e6f7ff;
+            border: 2px solid #007bff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            color: #888;
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
             margin-top: 10px;
+            border-radius: 8px;
+        }
+        
+        .alert {
+            background-color: #ffcccc !important;
+            border-color: #ff0000 !important;
+            color: #ff0000 !important;
         }
     </style>
-    <script>
-        function showPatientData() {
-            let selectedPatient = document.getElementById("patientDropdown").value;
-            let dataSection = document.getElementById("patientData");
-            if (selectedPatient) {
-                dataSection.style.display = "block";
-            } else {
-                dataSection.style.display = "none";
-            }
-        }
-    </script>
+
 </head>
 <body>
 
@@ -43,28 +41,36 @@
 
                     <!-- Patient Selection Dropdown -->
                     <div class="field">
-                        <label class="label">Select Patient</label>
+                        <label class="label">Choose Patient</label>
                         <div class="control">
                             <div class="select is-fullwidth is-medium is-rounded">
-                                <select id="patientDropdown" onchange="showPatientData()">
-                                    <option value="" disabled selected>Select a patient</option>
-                                    <option value="patient1">Ms. Aditi</option>
-                                    <option value="patient2">Mr. Harshit</option>
+                                <select id="patient-select" name="patient" required>
+                                    <option value="" disabled selected>Select a Patient</option>
+                                    {% for patient in patients %}
+                                        <option value="{{ patient.id }}">{{ patient.name }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Submit Button -->
+                    <div class="field mt-4">
+                        <div class="control">
+                            <button id="submit-btn" class="button is-primary is-fullwidth">Submit</button>
+                        </div>
+                    </div>
+
                     <!-- Real-Time Data Section (Initially Hidden) -->
-                    <div id="patientData" style="display: none;">
-                        <h2 class="title is-5 has-text-info">Real-Time Heart Rate</h2>
-                        <div class="graph-placeholder">Heart Rate Graph</div>
-
-                        <h2 class="title is-5 has-text-info mt-4">Real-Time Blood Pressure</h2>
-                        <div class="graph-placeholder">Blood Pressure Graph</div>
-
-                        <h2 class="title is-5 has-text-info mt-4">Real-Time Temperature</h2>
-                        <div class="graph-placeholder">Temperature Graph</div>
+                    <div id="data-section" class="mt-5" hidden>
+                        <h2 class="title is-5 has-text-info">Your Real-Time Heart Rate</h2>
+                        <div class="data-box" id="heart-rate-box">Loading...</div>
+                    
+                        <h2 class="title is-5 has-text-info mt-4">Your Real-Time Blood Pressure</h2>
+                        <div class="data-box" id="blood-pressure-box">Loading...</div>
+                    
+                        <h2 class="title is-5 has-text-info mt-4">Your Real-Time Temperature</h2>
+                        <div class="data-box" id="temperature-box">Loading...</div>
                     </div>
 
                 </div>
@@ -73,5 +79,54 @@
     </div>
 </section>
 
+<script>
+    let heartRateValues = {{ heart_rate|tojson }};
+    let bloodPressureValues = {{ blood_pressure|tojson }};
+    let temperatureValues = {{ temperature|tojson }};
+
+    let index = 0;
+    let intervalId = null;
+
+    function updateValues() {
+        let hrBox = document.getElementById("heart-rate-box");
+        let bpBox = document.getElementById("blood-pressure-box");
+        let tempBox = document.getElementById("temperature-box");
+
+        let heartRate = heartRateValues[index % heartRateValues.length];
+        let bloodPressure = bloodPressureValues[index % bloodPressureValues.length];
+        let temperature = temperatureValues[index % temperatureValues.length];
+
+        hrBox.innerText = heartRate + " BPM";
+        bpBox.innerText = bloodPressure;
+        tempBox.innerText = temperature + "°C";
+
+        hrBox.classList.toggle("alert", heartRate < 60 || heartRate > 100);
+        bpBox.classList.toggle("alert", parseInt(bloodPressure.split('/')[0]) > 140);
+        tempBox.classList.toggle("alert", temperature > 37.5);
+
+        index++;
+    }
+
+    function startMonitoring() {
+        document.getElementById("data-section").hidden = false;
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(updateValues, 2000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const patientSelect = document.getElementById("patient-select");
+        const submitBtn = document.getElementById("submit-btn");
+
+        submitBtn.addEventListener("click", function() {
+            const selectedPatient = patientSelect.value;
+            if (selectedPatient) {
+                console.log("Selected patient ID:", selectedPatient);
+                startMonitoring();
+            } else {
+                alert("Please select a patient before submitting.");
+            }
+        });
+    });
+</script>
 </body>
 </html>

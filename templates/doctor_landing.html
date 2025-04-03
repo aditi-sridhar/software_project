@@ -17,7 +17,7 @@
                     <p class="subtitle">Choose an option below</p>
 
                     <div class="buttons is-centered">
-                        <a href="{{ url_for('app_routes.doctor_dashboard') }}" class="button is-link is-medium is-fullwidth">
+                        <a href="{{ url_for('app_routes.doctor_dashboard', user_id=user_id) }}" class="button is-link is-medium is-fullwidth">
                             Patient Monitoring
                         </a>
                         <a href="{{ url_for('app_routes.consult_request', user_id=user_id) }}" class="button is-primary is-medium is-fullwidth">
