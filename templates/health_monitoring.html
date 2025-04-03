@@ -42,7 +42,7 @@
         </div>
         <div class="navbar-end">
             <!-- Notification Icon in Navbar -->
-            <a href="/notifications" class="navbar-item">
+            <a href="{{ url_for('app_routes.notifications', user_id=user_id) }}" class="navbar-item">
                 <i class="fas fa-bell"></i> <!-- Notification Bell Icon -->
             </a>
         </div>

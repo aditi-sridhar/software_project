@@ -14,53 +14,80 @@
             <div class="column is-half">
                 <div class="box has-text-centered">
                     <h1 class="title has-text-primary">Request Consultation</h1>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="notification is-danger is-light">
+                                {% for category, message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
                     <p class="subtitle">Select a patient and provide a reason</p>
-
-                    <form id="consultForm" class="mt-4">
+                    <form id="consultForm" method="POST" action="{{ url_for('app_routes.consult_request', user_id=user_id) }}">
                         <div class="field">
                             <label class="label">Choose Patient</label>
                             <div class="control">
                                 <div class="select is-fullwidth is-medium is-rounded">
                                     <select name="patient" required>
                                         <option value="" disabled selected>Select a Patient</option>
-                                        <option value="patient_1">Ms. Aditi</option>
-                                        <option value="patient_2">Mr. Harshit</option>
+                                        {% for patient in patients %}
+                                            <option value="{{ patient.id }}">{{ patient.name }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
                         </div>
-
+                    
                         <div class="field">
                             <label class="label">Reason for Consultation</label>
                             <div class="control">
                                 <input class="input is-medium is-rounded" type="text" name="reason" placeholder="Enter reason" required>
                             </div>
                         </div>
-
+                    
+                        <!-- New Fields for Date and Time Selection -->
+                        <div class="field">
+                            <label class="label">Appointment Date</label>
+                            <div class="control">
+                                <input class="input is-medium is-rounded" type="date" name="appointment_date" required>
+                            </div>
+                        </div>
+                    
+                        <div class="field">
+                            <label class="label">Appointment Time</label>
+                            <div class="control">
+                                <div class="select is-fullwidth is-medium is-rounded">
+                                    <select name="appointment_time" required>
+                                        <option value="" disabled selected>Select a Time Slot</option>
+                                        <option value="10:00">10:00 AM</option>
+                                        <option value="11:00">11:00 AM</option>
+                                        <option value="12:00">12:00 PM</option>
+                                        <option value="13:00">01:00 PM</option>
+                                        <option value="14:00">02:00 PM</option>
+                                        <option value="15:00">03:00 PM</option>
+                                        <option value="16:00">04:00 PM</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    
                         <div class="control">
                             <button type="submit" class="button is-primary is-fullwidth is-medium mt-3">
                                 Request Consultation with Patient
                             </button>
                         </div>
-
+                    
                         <!-- Notification (Hidden by Default) -->
                         <div id="notification" class="notification is-success mt-4" style="display: none;">
                             <strong>Notification Sent</strong>
-                        </div>
-
-                    </form>
+                        </div>                   
+                    </form>                    
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<script>
-    document.getElementById("consultForm").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent actual form submission
-        document.getElementById("notification").style.display = "block"; // Show notification
-    });
-</script>
 
 </body>
 </html>

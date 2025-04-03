@@ -40,7 +40,7 @@
                         <div class="content">
                             <p><strong>Appointment:</strong> {{ notification.appointment_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</p>
                             <p><strong>Message:</strong> {{ notification.message or 'No message available' }}</p>
-                            <p><strong>Created On:</strong> {{ notification.created_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            <p><strong>Sent On:</strong> {{ notification.created_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</p>
                         </div>
                     </div>
                 </div>

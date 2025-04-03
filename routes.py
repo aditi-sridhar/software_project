@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for,flash, current_app
 from models import User, Doctor, Appointment, Notification
-from datetime import datetime
+from datetime import datetime, timedelta
 from models import db
 from flask_bcrypt import Bcrypt
 import logging
@@ -69,7 +69,7 @@ def health_monitoring():
     if request.method == 'POST':
         health_data = request.form.get('health_data')
         return redirect(url_for('app_routes.book_consultation', user_id=user_id))
-    return render_template('health_monitoring.html')
+    return render_template('health_monitoring.html', user_id=user_id)
 
 @app_routes.route('/book_consultation', methods=['GET', 'POST'])
 
@@ -101,7 +101,7 @@ def book_consultation():
 
         return redirect(url_for('app_routes.payment', doctor_id=doctor_id, appointment_datetime=appointment_datetime, user_id=user_id))
     doctors = Doctor.query.all()
-    return render_template('book_consultation.html', doctors=doctors)
+    return render_template('book_consultation.html', doctors=doctors, user_id=user_id)
 
 @app_routes.route('/payment', methods=['GET', 'POST'])
 def payment():
@@ -178,14 +178,39 @@ def doctor_dashboard():
 
 @app_routes.route('/consult_request', methods=['GET', 'POST'])
 def consult_request():
-    user_id = request.args.get('user_id')  # Get user_id from URL
+    
+    user_id = request.args.get('user_id') 
     user = Doctor.query.get(user_id) if user_id else None
-
     if not user:
         current_app.logger.error("not logged in")
         return redirect(url_for('app_routes.home'))
+
+    if request.method=='POST':
+        all_patients=User.query.all()
+        current_app.logger.info("post method reached")
+        patient_id = request.form.get('patient')
+        reason = request.form.get('reason')
+        date=request.form.get('appointment_date')
+        time=request.form.get('appointment_time')
+        appointment_date = datetime.strptime(date, '%Y-%m-%d').date()  # Extract date
+        appointment_time = datetime.strptime(str(time), '%H:%M').time()
+
+        if len(reason)>255:
+            flash("message too long")
+            return redirect(url_for('app_routes.consult_request', user_id=user_id))
         
-    return render_template('consult_request.html')
+        appointment_datetime = datetime.combine(appointment_date, appointment_time)
+        new_notification=Notification(user_id=patient_id, doctor_id=user_id, appointment_datetime=appointment_datetime, message= reason)
+
+        db.session.add(new_notification)
+        db.session.commit()
+        current_app.logger.info("sent to database")
+        return redirect(url_for('app_routes.consult_request', user_id=user_id))
+
+
+    
+    all_patients=User.query.all()
+    return render_template('consult_request.html', patients=all_patients, user_id=user_id)
 
 @app_routes.route('/notifications')
 def notifications():
@@ -195,9 +220,10 @@ def notifications():
     if not user:
         current_app.logger.error("not logged in")
         return redirect(url_for('app_routes.home'))
-        
+    
     # Query to get notifications from the database
-    notifications = Notification.query.filter_by(user_id=user_id).all()
+    one_day_ago = datetime.utcnow() - timedelta(days=2)
+    notifications = Notification.query.filter_by(user_id=user_id).filter(Notification.created_datetime >= one_day_ago).all()
     
     # Pass the notifications to the HTML template
     return render_template('notifications.html', notifications=notifications)
